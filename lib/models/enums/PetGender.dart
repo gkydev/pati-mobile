@@ -1,0 +1,4 @@
+enum PetGender { 
+   female,
+   male
+}
