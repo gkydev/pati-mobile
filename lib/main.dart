@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pati_mobile/services/PetService.dart';
 
 void main() {
   runApp(MyApp());
+
+  var petService = new PetService();
+  petService.listAsync();
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
