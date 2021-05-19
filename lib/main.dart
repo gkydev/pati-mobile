@@ -3,9 +3,6 @@ import 'package:pati_mobile/services/PetService.dart';
 
 void main() {
   runApp(MyApp());
-
-  var petService = new PetService();
-  petService.listAsync();
 }
 
 class MyApp extends StatelessWidget {
