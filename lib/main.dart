@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pati_mobile/services/PetService.dart';
 
 void main() {
+  PetService().listAsync();
   runApp(MyApp());
 }
 

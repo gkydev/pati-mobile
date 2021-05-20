@@ -11,7 +11,7 @@ import 'package:pati_mobile/services/BaseService.dart';
 class PetService extends BaseService {
   PetService();
 
-  Future<DataResult<List<PetDto>>> listAsync({int currentPage = 1}) async {
+  Future<DataResult<List<PetDto>>> listAsync({int currentPage = 1, bool getImages=true}) async {
     try {
       var queryParameters = {
         "p": currentPage.toString(),
@@ -24,6 +24,12 @@ class PetService extends BaseService {
         List<PetDto> list = (jsonDecode(response.body) as List)
             .map((i) => PetDto.fromJson(i))
             .toList();
+
+        if(getImages){
+           await Future.forEach(list, (element) async {
+              element.images = await getPetImages(element.petId);
+            });
+        }
 
         return new SuccessDataResult(list);
       }
