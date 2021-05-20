@@ -4,6 +4,7 @@ import 'package:pati_mobile/services/PetService.dart';
 import "mainScreen.dart";
 
 void main() {
+  PetService().listAsync();
   runApp(MyApp());
 }
 
