@@ -14,9 +14,9 @@ PetDto _$PetDtoFromJson(Map<String, dynamic> json) {
     json['HasPassport'] as int,
     (json['Images'] as List)?.map((e) => e as String)?.toList(),
     json['PetAdditionInfo'] as String,
-    json['PetBirthDate'] == null
+    json['PetBirthdate'] == null
         ? null
-        : DateTime.parse(json['PetBirthDate'] as String),
+        : DateTime.parse(json['PetBirthdate'] as String),
     json['PetGender'] as int,
     json['PetHeight'] as int,
     json['PetId'] as int,
@@ -39,7 +39,7 @@ Map<String, dynamic> _$PetDtoToJson(PetDto instance) => <String, dynamic>{
       'PetHeight': instance.petHeight,
       'PetAdditionInfo': instance.petAdditionInfo,
       'PetVaccineInfo': instance.petVaccineInfo,
-      'PetBirthDate': instance.petBirthDate?.toIso8601String(),
+      'PetBirthdate': instance.petBirthDate?.toIso8601String(),
       'HasPassport': instance.hasPassport,
       'Genus': instance.genus,
       'PetGender': instance.petGender,

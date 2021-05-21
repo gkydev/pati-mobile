@@ -31,7 +31,7 @@ class PetDto{
 @JsonKey(name: 'PetVaccineInfo') 
  String petVaccineInfo;
 
-@JsonKey(name: 'PetBirthDate') 
+@JsonKey(name: 'PetBirthdate') 
  DateTime petBirthDate;
 
 @JsonKey(name: 'HasPassport') 

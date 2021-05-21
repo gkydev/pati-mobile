@@ -23,11 +23,12 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    tumStepler = _allSteps();
   }
+
 
   @override
   Widget build(BuildContext context) {
+    tumStepler = _allSteps();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -46,9 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
           },*/
           onStepContinue: () {
             setState(() {
-              if (_aktifStep < tumStepler.length - 1) {
-                _aktifStep++;
-              }
+              _continueButtonControl();
             });
           },
           onStepCancel: () {
@@ -68,6 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
   List<Step> _allSteps() {
     List<Step> steps = [
       Step(
+        isActive: true,
         title: Text("Ad"),
         state: _stateAyarla(0),
         content: TextFormField(
@@ -78,8 +78,8 @@ class _RegisterPageState extends State<RegisterPage> {
             prefixIcon: Icon(Icons.account_circle_sharp),
           ),
           validator: (deger) {
-            if (deger.length < 6) {
-              return "En az 6 karakter girilmeli.";
+            if (deger.length < 3) {
+              return "En az 3 karakter girilmeli.";
             } else
               return null;
           },
@@ -89,6 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       Step(
+        isActive: true,
         title: Text("Soyad"),
         state: _stateAyarla(1),
         content: TextFormField(
@@ -96,11 +97,11 @@ class _RegisterPageState extends State<RegisterPage> {
           decoration: InputDecoration(
             hintText: "Soyadınızı giriniz.",
             labelText: "Soyad",
-            //prefixIcon: Icon(Icons.account_circle_sharp),
+            prefixIcon: Icon(Icons.account_circle_sharp),
           ),
           validator: (deger) {
-            if (deger.length < 6) {
-              return "En az 6 karakter girilmeli.";
+            if (deger.length < 3) {
+              return "En az 3 karakter girilmeli.";
             } else
               return null;
           },
@@ -110,6 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       Step(
+        isActive: true,
         title: Text("Kullanıcı Adı"),
         state: _stateAyarla(2),
         content: TextFormField(
@@ -117,11 +119,13 @@ class _RegisterPageState extends State<RegisterPage> {
           decoration: InputDecoration(
             hintText: "Kullanıcı adınızı giriniz.",
             labelText: "Kullanıcı Adı",
-            //prefixIcon: Icon(Icons.account_circle_sharp),
+            prefixIcon: Icon(Icons.account_circle),
           ),
           validator: (deger) {
             if (deger.length < 6) {
-              return "En az 6 karakter girilmeli.";
+              return "En az 6 karakter giriniz.";
+            } else if (deger.length > 12) {
+              return "En fazla 12 karakter giriniz.";
             } else
               return null;
           },
@@ -131,14 +135,16 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       Step(
+        isActive: true,
         title: Text("Şifre"),
         state: _stateAyarla(3),
         content: TextFormField(
+          obscureText: true,
           key: passKey,
           decoration: InputDecoration(
             hintText: "Şifrenizi giriniz.",
             labelText: "Şifre",
-            //prefixIcon: Icon(Icons.account_circle_sharp),
+            prefixIcon: Icon(Icons.lock),
           ),
           validator: (deger) {
             if (deger.length < 6) {
@@ -152,42 +158,36 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       Step(
+        isActive: true,
         title: Text("Email"),
         state: _stateAyarla(4),
         content: TextFormField(
+          keyboardType: TextInputType.emailAddress,
           key: mailKey,
           decoration: InputDecoration(
             hintText: "Email adresi giriniz.",
             labelText: "Email",
-            //prefixIcon: Icon(Icons.account_circle_sharp),
+            prefixIcon: Icon(Icons.email),
           ),
-          validator: (deger) {
-            if (deger.length < 6 && !deger.contains("@")) {
-              return "Geçerli bir email adresi giriniz.";
-            } else
-              return null;
-          },
+          validator: _emailValidator,
           onSaved: (value) {
             email = value;
           },
         ),
       ),
       Step(
+        isActive: true,
         title: Text("Telefon Numarası"),
         state: _stateAyarla(5),
         content: TextFormField(
+          keyboardType: TextInputType.phone,
           key: phoneKey,
           decoration: InputDecoration(
             hintText: "Telefon numaranızı giriniz.",
             labelText: "Telefon",
-            //prefixIcon: Icon(Icons.account_circle_sharp),
+            prefixIcon: Icon(Icons.phone_android_rounded),
           ),
-          validator: (deger) {
-            if (deger.length < 6) {
-              return "En az 6 karakter girilmeli.";
-            } else
-              return null;
-          },
+          validator: _phoneNumberValidator,
           onSaved: (value) {
             phone = value;
           },
@@ -209,7 +209,73 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  String _isMail(String mail) {
+  void _continueButtonControl() {
+    switch (_aktifStep) {
+      case 0:
+        if (adKey.currentState.validate()) {
+          adKey.currentState.save();
+          hata = false;
+          _aktifStep = 1;
+        } else {
+          hata = true;
+        }
+        break;
+      case 1:
+        if (soyadKey.currentState.validate()) {
+          soyadKey.currentState.save();
+          hata = false;
+          _aktifStep = 2;
+        } else {
+          hata = true;
+        }
+        break;
+      case 2:
+        if (idKey.currentState.validate()) {
+          idKey.currentState.save();
+          hata = false;
+          _aktifStep = 3;
+        } else {
+          hata = true;
+        }
+        break;
+      case 3:
+        if (passKey.currentState.validate()) {
+          passKey.currentState.save();
+          hata = false;
+          _aktifStep = 4;
+        } else {
+          hata = true;
+        }
+        break;
+      case 4:
+        if (mailKey.currentState.validate()) {
+          mailKey.currentState.save();
+          hata = false;
+          _aktifStep = 5;
+        } else {
+          hata = true;
+        }
+        break;
+      case 5:
+        if (phoneKey.currentState.validate()) {
+          phoneKey.currentState.save();
+          hata = false;
+          _aktifStep = 5;
+          completedForm();
+        } else {
+          hata = true;
+        }
+        break;
+    }
+  }
+
+  void completedForm() {
+    debugPrint(
+        "Girilen değerler: ad:$ad soyad:$soyad id:$id email:$email phone:$phone");
+    Navigator.pop(context);
+  }
+
+  String _emailValidator(String mail) {
     RegExp regexp = RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$');
     if (!regexp.hasMatch(mail))
       return "Geçersiz email adresi";
@@ -217,131 +283,22 @@ class _RegisterPageState extends State<RegisterPage> {
       return null;
   }
 
-  String _isName(String name) {
-    RegExp exp = RegExp("^[a-zA-Z0-9ğüşöçİĞÜŞÖÇ]+");
+  String _letterValidator(String name) {
+    RegExp exp = RegExp("^[a-zA-Z+ğüşöçİĞÜŞÖÇ]+");
     if (!exp.hasMatch(name))
-      return "Numara kullanmayınız.";
+      return "Sadece harf kullanınız.";
     else
       return null;
   }
-}
 
-/*Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Kayıt Ol",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  hintText: "Adınızı giriniz.",
-                  labelText: "Ad",
-                  prefixIcon: Icon(Icons.account_circle_sharp),
-                ),
-                onSaved: (value) => _ad = value,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  hintText: "Soyadınızı giriniz.",
-                  labelText: "Soyad",
-                  prefixIcon: Icon(Icons.account_circle_sharp),
-                ),
-                validator: (String data) {
-                  if (data.length < 3) {
-                    return "3 harften büyük olmalı.";
-                  } else
-                    return null;
-                },
-                onSaved: (value) => _soyad = value,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Kullanıcı adınızı giriniz.",
-                  labelText: "Kullanıcı Adı",
-                  prefixIcon: Icon(Icons.account_circle),
-                ),
-                validator: (String data) {
-                  if (data.length < 3) {
-                    return "3 harften büyük olmalı.";
-                  } else
-                    return null;
-                },
-                onSaved: (value) => _id = value,
-              ),
-              TextFormField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Şifrenizi giriniz.",
-                  labelText: "Şifre",
-                  prefixIcon: Icon(Icons.lock),
-                ),
-                validator: (String data) {
-                  if (data.length < 6) {
-                    return "En az 6 karakter gerekli.";
-                  } else
-                    return null;
-                },
-                onSaved: (value) => _password = value,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: "Email adresinizi giriniz.",
-                  labelText: "Email",
-                  prefixIcon: Icon(Icons.email),
-                ),
-                //validator: _isMail,
-                onSaved: (value) => _email = value,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: "Telefon numaranızı giriniz.",
-                  labelText: "Telefon Numarası",
-                  prefixIcon: Icon(Icons.phone),
-                ),
-                onSaved: (value) => _phone = value,
-              ),
-              SizedBox(
-                height: 60,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  RaisedButton(
-                    elevation: 12,
-                    padding: EdgeInsets.all(10),
-                    onPressed: () {
-                      _confirmRegistration;
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      /*Navigator.pushReplacementNamed(context, "/")
-                              .then((popValue) {
-                            debugPrint("$popValue");
-                          });*/
-                    },
-                    child: Text(
-                      "Kayıt Ol",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    color: Colors.pink.shade400,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );*/
+  String _phoneNumberValidator(String value) {
+    Pattern pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp regex = new RegExp(pattern);
+    if (value.length != 11) {
+      return 'Telefon numarası giriniz.';
+    } else if (!regex.hasMatch(value)) {
+      return 'Geçerli bir telefon numarası giriniz.';
+    }
+    return null;
+  }
+}

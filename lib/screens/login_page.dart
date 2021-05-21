@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -6,19 +7,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController textController1;
-
-  @override
-  void initState() {
-    super.initState();
-    textController1 = TextEditingController(text: "default");
-  }
-
-  @override
-  void dispose() {
-    textController1.dispose();
-    super.dispose();
-  }
+  bool kontrol = false;
+  String _id, _password;
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,21 +20,87 @@ class _LoginPageState extends State<LoginPage> {
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 100, horizontal: 20),
         child: Form(
+          autovalidate: kontrol,
+          key: formKey,
           child: ListView(
             children: [
               TextFormField(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
                 decoration: InputDecoration(
                   hintText: "Kullanıcı adınızı giriniz.",
                   labelText: "Kullanıcı Adı",
                   prefixIcon: Icon(Icons.account_circle),
                 ),
+                //validator: _idCheck,
+                onSaved: (value) => _id = value,
               ),
               TextFormField(
+                obscureText: true,
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
                 decoration: InputDecoration(
                   hintText: "Şifrenizi giriniz.",
                   labelText: "Şifre",
                   prefixIcon: Icon(Icons.lock),
                 ),
+                //validator: _passwordCheck,
+                onSaved: (value) => _password = value,
+              ),
+              Column(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: 100,
+                      ),
+                      RaisedButton(
+                        elevation: 12,
+                        padding: EdgeInsets.all(10),
+                        onPressed: () {
+                          _confirmLogin;
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          Navigator.pushNamed(
+                            context,
+                            '/PetList',
+                          );
+                        },
+                        child: Text(
+                          "Giriş Yap",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        color: Colors.pink.shade400,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Text("Hesabınız yok mu?  "),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(context, '/Register');
+                            },
+                            child: Text(
+                              "Kayıt ol",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.pink),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -51,45 +108,17 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
-/*ListView(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
-            child: Column(
-              children: [
-                TextField(
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  autofocus: false,
-                  controller: textController1,
-                  decoration: InputDecoration(
-                    hintText: "Kullanıcı adınızı giriniz.",
-                    labelText: "Kullanıcı Adı",
-                    prefixIcon: Icon(Icons.account_circle),
-                  ),
-                ),
-                TextField(
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  autofocus: false,
-                  decoration: InputDecoration(
-                    hintText: "Şifrenizi giriniz.",
-                    labelText: "Şifre",
-                    prefixIcon: Icon(Icons.keyboard),
-                  ),
-                ),
-              ],
-            ),
-          ),
 
-          /*Container(
-            margin: EdgeInsets.all(5),
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.blue.shade100,
-            child:
-                Align(alignment: Alignment.center, child: Text("Form Alanı")),
-          ),*/
-        ],
-      ),*/
+  void _confirmLogin() {
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
+    } else {
+      setState(() {
+        kontrol = true;
+      });
+    }
+  }
+
+  void _idCheck(String value) {}
+  void _passwordCheck(String value) {}
+}

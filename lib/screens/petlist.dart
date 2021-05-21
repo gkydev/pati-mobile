@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-import "services/PetService.dart";
+import '../services/PetService.dart';
 
-class SecondScreen extends StatelessWidget {
+class PetList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var x = PetService().listAsync();
@@ -15,7 +15,7 @@ class SecondScreen extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             print(snapshot.data);
             if (snapshot.data == null) {
-              return Container(child: Center(child: Text("Loading...")));
+              return Container(child: Center(child: Text("Yükleniyor...")));
             } else {
               return ListView.builder(
                 itemCount: snapshot.data.data.length,
@@ -32,7 +32,10 @@ class SecondScreen extends StatelessWidget {
                     subtitle: Text(snapshot.data.data[index].petAdditionInfo,
                         textAlign: TextAlign.center),
                     onTap: () {
-                      // Detay sayfası
+                      Navigator.pushNamed(
+                        context,
+                        '/PetDetail', arguments: snapshot.data.data[index]
+                      );
                     },
                   );
                 },
