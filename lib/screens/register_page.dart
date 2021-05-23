@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pati_mobile/models/UserDto.dart';
+import 'package:pati_mobile/services/UserService.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool hata = false;
   List<Step> tumStepler;
   String ad, soyad, email, password, id, phone;
+  bool isRegisterProcessing = false;
 
   var adKey = GlobalKey<FormFieldState>();
   var soyadKey = GlobalKey<FormFieldState>();
@@ -24,7 +27,6 @@ class _RegisterPageState extends State<RegisterPage> {
   void initState() {
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -270,15 +272,27 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void completedForm() {
-    debugPrint(
-        "Girilen değerler: ad:$ad soyad:$soyad id:$id email:$email phone:$phone");
-    Navigator.pop(context);
+    print(ad);
+
+    UserService()
+        .registerAsync(new UserDto(ad, soyad, email, phone, password))
+        .then((res) {
+          if (res.success) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/Login',
+              (Route<dynamic> route) => false,
+            );
+          } else {
+            print(res.message);
+          }
+    });
   }
 
   String _emailValidator(String mail) {
     RegExp regexp = RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$');
     if (!regexp.hasMatch(mail))
-      return "Geçersiz email adresi";
+      return "Geçersiz email adresi.";
     else
       return null;
   }

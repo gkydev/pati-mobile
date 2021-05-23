@@ -16,4 +16,11 @@ class BaseService {
       'Authorization': 'Bearer $token',
     };
   }
+
+   dynamic getDefaultHeaders() async {
+    return {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+  }
 }

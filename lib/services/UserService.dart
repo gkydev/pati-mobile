@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:pati_mobile/models/UserDto.dart';
 import 'package:pati_mobile/models/UserLoginDto.dart';
 import 'package:pati_mobile/results/ErrorResult.dart';
 import 'package:pati_mobile/results/Result.dart';
@@ -22,6 +23,25 @@ class UserService extends BaseService {
         await JWTHelper.setToken(response.body);
         Auth().isAuthenticated = true;
         return SuccessResult("");
+      } else {
+        return ErrorResult(response.body);
+      }
+    } catch (e) {
+      return new ErrorResult(e.toString());
+    }
+  }
+
+  Future<Result> registerAsync(UserDto dto) async {
+    try {
+      var url = Uri.http(baseApiUrl, "/api/auth/register");
+
+      print(jsonEncode(dto.toJson()));
+
+      var response = await http.post(url,
+          headers: await getDefaultHeaders(), body: jsonEncode(dto.toJson()));
+
+      if (isSuccessStatusCode(response.statusCode)) {
+        return SuccessResult("Kayıt başarılı.");
       } else {
         return ErrorResult(response.body);
       }
