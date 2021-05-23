@@ -4,10 +4,13 @@ import 'package:pati_mobile/screens/login_page.dart';
 import 'package:pati_mobile/screens/pet_detail.dart';
 import 'package:pati_mobile/screens/petlist.dart';
 import 'package:pati_mobile/screens/register_page.dart';
+import 'package:pati_mobile/utilities/Auth.dart';
 
-void main() {
+void main()  async {
+    await Auth.create();
+
   runApp(MaterialApp(
-    title: "Flutter Dersleri",
+    title: "Pati",
     initialRoute: "",
     routes: {
       '/': (context) => FirstPage(),
