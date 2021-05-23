@@ -11,24 +11,27 @@ import 'package:pati_mobile/services/BaseService.dart';
 class PetService extends BaseService {
   PetService();
 
-  Future<DataResult<List<PetDto>>> listAsync({int currentPage = 1, bool getImages=true}) async {
+  Future<DataResult<List<PetDto>>> listAsync(
+      {int currentPage = 1, bool getImages = true}) async {
     try {
       var queryParameters = {
         "p": currentPage.toString(),
       };
 
       var url = Uri.http(baseApiUrl, "/api/pet/getPets", queryParameters);
-      var response = await http.get(url);
+      
+      var response =
+          await http.get(url, headers: await getDefaultHeadersWithJwtToken());
 
       if (isSuccessStatusCode(response.statusCode)) {
         List<PetDto> list = (jsonDecode(response.body) as List)
             .map((i) => PetDto.fromJson(i))
             .toList();
 
-        if(getImages){
-           await Future.forEach(list, (element) async {
-              element.images = await getPetImages(element.petId);
-            });
+        if (getImages) {
+          await Future.forEach(list, (element) async {
+            element.images = await getPetImages(element.petId);
+          });
         }
 
         return new SuccessDataResult(list);
@@ -49,7 +52,7 @@ class PetService extends BaseService {
 
       if (isSuccessStatusCode(response.statusCode)) {
         PetDto data = PetDto.fromJson(jsonDecode(response.body));
-        
+
         data.images = await getPetImages(id);
         return new SuccessDataResult(data);
       }
@@ -66,12 +69,10 @@ class PetService extends BaseService {
     var url = Uri.http(baseApiUrl, "/api/pet/photo", queryParameters);
     var response = await http.get(url);
     if (isSuccessStatusCode(response.statusCode)) {
-      
       List<String> imageList = [];
 
-      json
-          .decode(response.body)
-          .forEach((item) => imageList.add(StaticVars.baseImageAddress +  item['PictureUrl']));
+      json.decode(response.body).forEach((item) =>
+          imageList.add(StaticVars.baseImageAddress + item['PictureUrl']));
 
       return imageList;
     } else {

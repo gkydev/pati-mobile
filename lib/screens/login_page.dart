@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pati_mobile/models/UserLoginDto.dart';
+import 'package:pati_mobile/services/UserService.dart';
+import 'package:pati_mobile/utilities/Auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,7 +12,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool kontrol = false;
   String _id, _password;
+  String errorMsgFromApi = null;
   final formKey = GlobalKey<FormState>();
+
+  bool isLoginProcessing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +31,9 @@ class _LoginPageState extends State<LoginPage> {
           child: ListView(
             children: [
               TextFormField(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
+                onTap: () {},
                 decoration: InputDecoration(
+                  errorText: errorMsgFromApi != null ? errorMsgFromApi : "",
                   hintText: "Kullanıcı adınızı giriniz.",
                   labelText: "Kullanıcı Adı",
                   prefixIcon: Icon(Icons.account_circle),
@@ -38,9 +43,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextFormField(
                 obscureText: true,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
+                onTap: () {},
                 decoration: InputDecoration(
                   hintText: "Şifrenizi giriniz.",
                   labelText: "Şifre",
@@ -58,25 +61,16 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 100,
                       ),
-                      RaisedButton(
-                        elevation: 12,
-                        padding: EdgeInsets.all(10),
-                        onPressed: () {
-                          _confirmLogin;
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          Navigator.pushNamed(
-                            context,
-                            '/PetList',
-                          );
-                        },
+                      ElevatedButton(
+                        onPressed: isLoginProcessing ? null : _confirmLogin,
                         child: Text(
-                          "Giriş Yap",
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                          isLoginProcessing ? "Yükleniyor.." : "Giriş Yap",
                         ),
-                        color: Colors.pink.shade400,
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.pink,
+                            padding: EdgeInsets.all(12),
+                            textStyle: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
                       SizedBox(
                         height: 20,
@@ -110,13 +104,41 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _confirmLogin() {
+    setState(() {
+      errorMsgFromApi = null;
+      isLoginProcessing = true;
+    });
+
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
+      login();
     } else {
       setState(() {
         kontrol = true;
+        isLoginProcessing = false;
+        print("not valid");
       });
     }
+  }
+
+  void login() {
+    UserService().loginAsync(new UserLoginDto(_id, _password)).then((result) {
+      setState(() {
+        isLoginProcessing = false;
+      });
+
+      if (result.success) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/PetList',
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        setState(() {
+          errorMsgFromApi = result.message;
+        });
+      }
+    });
   }
 
   void _idCheck(String value) {}
