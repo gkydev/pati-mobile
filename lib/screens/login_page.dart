@@ -26,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               TextFormField(
                 onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
                 },
                 decoration: InputDecoration(
                   hintText: "Kullanıcı adınızı giriniz.",
@@ -39,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 obscureText: true,
                 onTap: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
                 },
                 decoration: InputDecoration(
                   hintText: "Şifrenizi giriniz.",
@@ -63,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
                         padding: EdgeInsets.all(10),
                         onPressed: () {
                           _confirmLogin;
-                          FocusScope.of(context).requestFocus(FocusNode());
                           Navigator.pushNamed(
                             context,
                             '/PetList',
