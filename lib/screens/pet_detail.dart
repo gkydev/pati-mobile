@@ -23,6 +23,7 @@ class _PetDetailState extends State<PetDetail> {
   String _petDescription;
   String _shelterName;
   LatLng _shelterLocation;
+  String _shelterPhone;
   GoogleMapController _googleMapController;
   Carousel _carousel = new Carousel();
   BitmapDescriptor mapMarker;
@@ -50,12 +51,13 @@ class _PetDetailState extends State<PetDetail> {
       _petSpecies = dto.speciesName;
       _petGender = dto.petGender == 0 ? "Dişi" : "Erkek";
       _petVac = dto.petVaccineInfo;
-      _petHeight = dto.petHeight.toString() + " cm";
-      _petWeight = dto.petWeight.toString() + " kg";
+      _petHeight = dto.petWeight.toString() + " cm";
+      _petWeight = dto.petHeight.toString() + " kg";
       _petDescription = dto.petAdditionInfo;
-      _shelterLocation = LatLng(num.tryParse(dto.shelterLocationLat) ?? 0,
-          num.tryParse(dto.shelterLocationLng) ?? 0);
+      _shelterLocation = LatLng(num.tryParse(dto.shelterLocationLat) ?? 38.465437,
+          num.tryParse(dto.shelterLocationLng) ?? 27.100390);
       _shelterName = dto.shelterName;
+      _shelterPhone = dto.shelterPhone;
       _carousel.imgList = dto.images;
     });
   }
@@ -70,7 +72,19 @@ class _PetDetailState extends State<PetDetail> {
     if (await canLaunch(number)) {
       await launch(number);
     } else {
-      throw 'Could not launch $number';
+      return;
+    }
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      return;
     }
   }
 
@@ -135,7 +149,7 @@ class _PetDetailState extends State<PetDetail> {
                   children: [
                     Expanded(
                       flex: 5,
-                      child: Text('Aşılar:',
+                      child: Text('Yaş:',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18)),
                     ),
@@ -149,9 +163,7 @@ class _PetDetailState extends State<PetDetail> {
                     ),
                   ],
                 ),
-                Divider(
-                  indent: 50,
-                ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -171,9 +183,7 @@ class _PetDetailState extends State<PetDetail> {
                     ),
                   ],
                 ),
-                Divider(
-                  indent: 50,
-                ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -193,9 +203,7 @@ class _PetDetailState extends State<PetDetail> {
                     ),
                   ],
                 ),
-                Divider(
-                  indent: 50,
-                ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -215,9 +223,7 @@ class _PetDetailState extends State<PetDetail> {
                     ),
                   ],
                 ),
-                Divider(
-                  indent: 50,
-                ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -237,9 +243,7 @@ class _PetDetailState extends State<PetDetail> {
                     ),
                   ],
                 ),
-                Divider(
-                  indent: 50,
-                ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -262,26 +266,26 @@ class _PetDetailState extends State<PetDetail> {
               ],
             ),
           ),
-          Divider(),
+          Divider(thickness: 1),
           Padding(
               padding: EdgeInsets.all(20),
               child: Center(
                 child: Text('$_petDescription'),
               )),
-          Divider(),
+          Divider(thickness: 1),
           FlatButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Barınak No', style: TextStyle(color: Colors.blue)),
-                  Icon(Icons.call, color: Colors.blue),
-                ],
-              ),
-              onPressed: () => setState(() {
-                    _makePhoneCall('tel:05078853305');
-                  })),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(((_shelterPhone?.isEmpty == false ?? false) ? '$_shelterPhone' : 'NUMARA YOK'), style: TextStyle(color: Colors.blue)),
+                Icon(Icons.call, color: Colors.blue),
+              ],
+            ),
+            onPressed: (_shelterPhone?.isEmpty == false ?? false) ? () => setState(() {
+                  _makePhoneCall('tel:$_shelterPhone');
+                }) : null)
         ],
       )),
       GoogleMap(
@@ -293,7 +297,7 @@ class _PetDetailState extends State<PetDetail> {
         markers: {
           Marker(
               markerId: MarkerId('shelter'),
-              infoWindow: InfoWindow(title: '$_shelterName'),
+              infoWindow: InfoWindow(title: '$_shelterName', onTap: () => setState(() {_launchInBrowser('https://www.google.com/search?q=$_shelterName');})),
               icon: mapMarker,
               position: _shelterLocation)
         },

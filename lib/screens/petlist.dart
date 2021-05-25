@@ -7,7 +7,7 @@ class PetList extends StatelessWidget {
     var x = PetService().listAsync();
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("Hayvanlar"),
+        title: new Text("Evcil Hayvanlar"),
       ),
       body: Container(
         child: FutureBuilder(
@@ -15,7 +15,7 @@ class PetList extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             print(snapshot.data);
             if (snapshot.data == null) {
-              return Container(child: Center(child: Text("Yükleniyor...")));
+              return Container(child: Center(child: CircularProgressIndicator()));
             } else {
               return ListView.builder(
                 itemCount: snapshot.data.data.length,

@@ -29,6 +29,7 @@ PetDto _$PetDtoFromJson(Map<String, dynamic> json) {
     json['SpeciesName'] as String,
     json['ShelterLocationLat'] == null ? "" :  json['ShelterLocationLat'] as String,
     json['ShelterLocationLng'] == null ? "" :  json['ShelterLocationLng'] as String,
+    json['ShelterPhone'] == null ? "" :  json['ShelterPhone'] as String
   );
 }
 
@@ -51,5 +52,6 @@ Map<String, dynamic> _$PetDtoToJson(PetDto instance) => <String, dynamic>{
       'SpeciesName': instance.speciesName,
       'ShelterName': instance.shelterName,
       'ShelterLocationLat': instance.shelterLocationLat,
-      'ShelterLocationLng': instance.shelterLocationLng
+      'ShelterLocationLng': instance.shelterLocationLng,
+      'ShelterPhone': instance.shelterPhone
     };
