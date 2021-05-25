@@ -27,6 +27,8 @@ PetDto _$PetDtoFromJson(Map<String, dynamic> json) {
     json['ShelterName'] as String,
     json['SpeciesId'] as int,
     json['SpeciesName'] as String,
+    json['ShelterLocationLat'] as String,
+    json['ShelterLocationLng'] as String
   );
 }
 
@@ -48,4 +50,6 @@ Map<String, dynamic> _$PetDtoToJson(PetDto instance) => <String, dynamic>{
       'GenusId': instance.genusId,
       'SpeciesName': instance.speciesName,
       'ShelterName': instance.shelterName,
+      'ShelterLocationLat': instance.shelterLocationLat,
+      'ShelterLocationLng': instance.shelterLocationLng
     };

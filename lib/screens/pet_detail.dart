@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pati_mobile/models/PetDto.dart';
+import 'package:pati_mobile/widgets/carousel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PetDetail extends StatefulWidget {
@@ -12,17 +13,29 @@ class PetDetail extends StatefulWidget {
 
 class _PetDetailState extends State<PetDetail> {
   int _selectedIndex = 0;
-  String _petName = "pet name placeholder";
-  String _petAge = "pet age placeholder";
-  String _petSpecies = "pet species placeholder";
-  String _petGender = "pet gender placeholder";
-  String _petVac = "pet vac placeholder";
-  String _petHeight = "pet height placeholder";
-  String _petWeight = "pet weight placeholder";
-  String _petDescription = "pet description placeholder";
-  LatLng _shelterLocation = LatLng(0, 0);
+  String _petName;
+  String _petAge;
+  String _petSpecies;
+  String _petGender;
+  String _petVac;
+  String _petHeight;
+  String _petWeight;
+  String _petDescription;
+  String _shelterName;
+  LatLng _shelterLocation;
   GoogleMapController _googleMapController;
-  List<String> _images;
+  Carousel _carousel = new Carousel();
+  BitmapDescriptor mapMarker;
+
+  @override
+  void initState() {
+    super.initState();
+    setCustomMarker();
+  }
+
+  void setCustomMarker() async {
+    mapMarker = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/MapIcon64.png');
+  }
 
   void _getPetInfo(PetDto dto) {
     setState(() {
@@ -39,8 +52,9 @@ class _PetDetailState extends State<PetDetail> {
       _petHeight = dto.petHeight.toString() + " cm";
       _petWeight = dto.petWeight.toString() + " kg";
       _petDescription = dto.petAdditionInfo;
-      _shelterLocation = LatLng(37.773972, -122.431297);
-      _images = dto.images;
+      _shelterLocation = LatLng(num.tryParse(dto.shelterLocationLat), num.tryParse(dto.shelterLocationLng));
+      _shelterName = dto.shelterName;
+      _carousel.imgList = dto.images;
     });
   }
 
@@ -57,7 +71,7 @@ class _PetDetailState extends State<PetDetail> {
       throw 'Could not launch $number';
     }
   }
-
+  
   PetDto args;
 
   @override
@@ -74,7 +88,7 @@ class _PetDetailState extends State<PetDetail> {
           ? null
           : FloatingActionButton(
               child: Icon(Icons.center_focus_strong),
-              onPressed: () => _googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: _shelterLocation, zoom: 11.5))),
+              onPressed: () => _googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: _shelterLocation, zoom: 15.0))),
             ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.pink,
@@ -103,10 +117,7 @@ class _PetDetailState extends State<PetDetail> {
         children: [
           Center(
               child: Container(
-            child: Image.network(
-              'https://taninticaret.net/images/pati/adf7dbea50ab937370e9bfda40895c7054e57891.jpg',
-              fit: BoxFit.fill,
-            ),
+            child: _carousel.generateCarousel(),
             alignment: Alignment.center,
             height: 250.0,
           )),
@@ -175,13 +186,13 @@ class _PetDetailState extends State<PetDetail> {
       GoogleMap(
         myLocationButtonEnabled: false,
         zoomControlsEnabled: false,
-        initialCameraPosition: CameraPosition(target: _shelterLocation, zoom: 11.5),
+        initialCameraPosition: CameraPosition(target: _shelterLocation, zoom: 15.0),
         onMapCreated: (controller) => {_googleMapController = controller},
         markers: {
           Marker(
             markerId: MarkerId('shelter'),
-            infoWindow: InfoWindow(title: '$_petName'),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose),
+            infoWindow: InfoWindow(title: '$_shelterName'),
+            icon: mapMarker,
             position: _shelterLocation
           )
         },
