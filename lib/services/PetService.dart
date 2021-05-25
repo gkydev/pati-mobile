@@ -34,6 +34,10 @@ class PetService extends BaseService {
           });
         }
 
+         await Future.forEach(list, (element) async {
+            element.shelterName = await getShelterName(element.shelterId);
+          });
+
         return new SuccessDataResult(list);
       }
 
@@ -77,6 +81,20 @@ class PetService extends BaseService {
       return imageList;
     } else {
       return new List.empty();
+    }
+  }
+
+
+  Future<String> getShelterName(int shelterId) async {
+    var queryParameters = {"id": shelterId.toString()};
+
+    var url = Uri.http(baseApiUrl, "/api/admin/shelter", queryParameters);
+    var response = await http.get(url, headers: await getDefaultHeadersWithJwtToken());
+
+    if (isSuccessStatusCode(response.statusCode)) {
+      return json.decode(response.body)["ShelterName"];
+    } else {
+      return  "";
     }
   }
 }
