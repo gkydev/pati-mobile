@@ -289,6 +289,7 @@ class _PetDetailState extends State<PetDetail> {
         ],
       )),
       GoogleMap(
+        mapToolbarEnabled: false,
         myLocationButtonEnabled: false,
         zoomControlsEnabled: false,
         initialCameraPosition:

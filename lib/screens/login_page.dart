@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pati_mobile/models/UserLoginDto.dart';
 import 'package:pati_mobile/services/UserService.dart';
 import 'package:pati_mobile/utilities/Auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,12 +14,24 @@ class _LoginPageState extends State<LoginPage> {
   bool kontrol = false;
   String _id, _password;
   String errorMsgFromApi = null;
+  String rememberedMail = "";
   final formKey = GlobalKey<FormState>();
-
+  TextEditingController _emailController = new TextEditingController();
   bool isLoginProcessing = false;
+  bool isFirstRender = true;
 
   @override
   Widget build(BuildContext context) {
+    SharedPreferences.getInstance().then((value) {
+      setState(() {
+        if (isFirstRender) {
+          rememberedMail = value.getString('email');
+          _emailController.text = rememberedMail ?? "";
+          isFirstRender = false;
+        }
+      });
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Giriş Yap"),
@@ -32,10 +45,11 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               TextFormField(
                 onTap: () {},
+                controller: _emailController,
                 decoration: InputDecoration(
                   errorText: errorMsgFromApi != null ? errorMsgFromApi : "",
-                  hintText: "Kullanıcı adınızı giriniz.",
-                  labelText: "Kullanıcı Adı",
+                  hintText: "E-Posta adresinizi giriniz.",
+                  labelText: "E-Posta",
                   prefixIcon: Icon(Icons.account_circle),
                 ),
                 //validator: _idCheck,
@@ -112,6 +126,9 @@ class _LoginPageState extends State<LoginPage> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       login();
+      SharedPreferences.getInstance().then((value) {
+        value.setString('email', _id);
+      });
     } else {
       setState(() {
         kontrol = true;
