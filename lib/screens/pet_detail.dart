@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pati_mobile/models/PetDto.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,6 +20,8 @@ class _PetDetailState extends State<PetDetail> {
   String _petHeight = "pet height placeholder";
   String _petWeight = "pet weight placeholder";
   String _petDescription = "pet description placeholder";
+  LatLng _shelterLocation = LatLng(0, 0);
+  GoogleMapController _googleMapController;
   List<String> _images;
 
   void _getPetInfo(PetDto dto) {
@@ -36,6 +39,7 @@ class _PetDetailState extends State<PetDetail> {
       _petHeight = dto.petHeight.toString() + " cm";
       _petWeight = dto.petWeight.toString() + " kg";
       _petDescription = dto.petAdditionInfo;
+      _shelterLocation = LatLng(37.773972, -122.431297);
       _images = dto.images;
     });
   }
@@ -70,7 +74,7 @@ class _PetDetailState extends State<PetDetail> {
           ? null
           : FloatingActionButton(
               child: Icon(Icons.center_focus_strong),
-              onPressed: null,
+              onPressed: () => _googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: _shelterLocation, zoom: 11.5))),
             ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.pink,
@@ -168,13 +172,19 @@ class _PetDetailState extends State<PetDetail> {
                   })),
         ],
       )),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Text('Map Here'),
+      GoogleMap(
+        myLocationButtonEnabled: false,
+        zoomControlsEnabled: false,
+        initialCameraPosition: CameraPosition(target: _shelterLocation, zoom: 11.5),
+        onMapCreated: (controller) => {_googleMapController = controller},
+        markers: {
+          Marker(
+            markerId: MarkerId('shelter'),
+            infoWindow: InfoWindow(title: '$_petName'),
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRose),
+            position: _shelterLocation
           )
-        ],
+        },
       )
     ];
 
