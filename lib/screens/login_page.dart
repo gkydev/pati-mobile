@@ -116,7 +116,6 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         kontrol = true;
         isLoginProcessing = false;
-        print("not valid");
       });
     }
   }

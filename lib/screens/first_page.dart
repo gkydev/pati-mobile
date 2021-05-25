@@ -43,7 +43,6 @@ class FirstPage extends StatelessWidget {
                             context,
                             "/Login",
                           ).then((popValue) {
-                            debugPrint("$popValue");
                           });
                         },
                         child: Text(
@@ -63,7 +62,6 @@ class FirstPage extends StatelessWidget {
                             context,
                             "/Register",
                           ).then((popValue) {
-                            debugPrint("$popValue");
                           });
                         },
                         child: Text(

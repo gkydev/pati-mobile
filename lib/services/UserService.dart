@@ -35,7 +35,6 @@ class UserService extends BaseService {
     try {
       var url = Uri.http(baseApiUrl, "/api/auth/register");
 
-      print(jsonEncode(dto.toJson()));
 
       var response = await http.post(url,
           headers: await getDefaultHeaders(), body: jsonEncode(dto.toJson()));

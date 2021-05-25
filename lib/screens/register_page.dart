@@ -272,7 +272,6 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void completedForm() {
-    print(ad);
 
     UserService()
         .registerAsync(new UserDto(ad, soyad, email, phone, password))
@@ -284,7 +283,7 @@ class _RegisterPageState extends State<RegisterPage> {
               (Route<dynamic> route) => false,
             );
           } else {
-            print(res.message);
+            print(res.message); //TODO: Ekranda hata mesajını göster.
           }
     });
   }

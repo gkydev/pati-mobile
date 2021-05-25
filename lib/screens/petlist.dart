@@ -13,7 +13,6 @@ class PetList extends StatelessWidget {
         child: FutureBuilder(
           future: x,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            print(snapshot.data);
             if (snapshot.data == null) {
               return Container(child: Center(child: CircularProgressIndicator()));
             } else {
