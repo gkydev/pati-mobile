@@ -58,9 +58,15 @@ class PetDto{
   @JsonKey(name: 'ShelterName') 
  String shelterName;
 
+ @JsonKey(name: 'ShelterLocationLat')
+ String shelterLocationLat;
+
+ @JsonKey(name: 'ShelterLocationLng')
+ String shelterLocationLng;
+
 
  PetDto(this.countyId, this.genus, this.genusId, this.hasPassport, this.images, this.petAdditionInfo, this.petBirthDate, this.petGender, this.petHeight, this.petId, this.petName, this.petVaccineInfo
- ,this.petWeight, this.shelterId, this.shelterName, this.speciesId,this.speciesName);
+ ,this.petWeight, this.shelterId, this.shelterName, this.speciesId, this.speciesName, this.shelterLocationLat, this.shelterLocationLng);
 
   factory PetDto.fromJson(Map<String, dynamic> json) => _$PetDtoFromJson(json);
 
