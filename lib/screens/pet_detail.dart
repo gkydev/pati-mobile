@@ -34,7 +34,8 @@ class _PetDetailState extends State<PetDetail> {
   }
 
   void setCustomMarker() async {
-    mapMarker = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/MapIcon64.png');
+    mapMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'assets/MapIcon64.png');
   }
 
   void _getPetInfo(PetDto dto) {
@@ -52,7 +53,8 @@ class _PetDetailState extends State<PetDetail> {
       _petHeight = dto.petHeight.toString() + " cm";
       _petWeight = dto.petWeight.toString() + " kg";
       _petDescription = dto.petAdditionInfo;
-      _shelterLocation = LatLng(num.tryParse(dto.shelterLocationLat), num.tryParse(dto.shelterLocationLng));
+      _shelterLocation = LatLng(num.tryParse(dto.shelterLocationLat) ?? 0,
+          num.tryParse(dto.shelterLocationLng) ?? 0);
       _shelterName = dto.shelterName;
       _carousel.imgList = dto.images;
     });
@@ -71,7 +73,7 @@ class _PetDetailState extends State<PetDetail> {
       throw 'Could not launch $number';
     }
   }
-  
+
   PetDto args;
 
   @override
@@ -88,7 +90,9 @@ class _PetDetailState extends State<PetDetail> {
           ? null
           : FloatingActionButton(
               child: Icon(Icons.center_focus_strong),
-              onPressed: () => _googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: _shelterLocation, zoom: 15.0))),
+              onPressed: () => _googleMapController.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                      CameraPosition(target: _shelterLocation, zoom: 15.0))),
             ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.pink,
@@ -122,44 +126,141 @@ class _PetDetailState extends State<PetDetail> {
             height: 250.0,
           )),
           Divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Yaş:',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  Text('Tür:',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  Text('Cinsiyet:',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  Text('Aşılar:',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  Text('Boy:',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  Text('Kilo:',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text('$_petAge', style: TextStyle(fontSize: 18)),
-                  Text('$_petSpecies', style: TextStyle(fontSize: 18)),
-                  Text('$_petGender', style: TextStyle(fontSize: 18)),
-                  Text('$_petVac', style: TextStyle(fontSize: 18)),
-                  Text('$_petHeight', style: TextStyle(fontSize: 18)),
-                  Text('$_petWeight', style: TextStyle(fontSize: 18)),
-                ],
-              )
-            ],
+          Container(
+            margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Text('Aşılar:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        _petAge,
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  indent: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Text('Tür:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        _petSpecies,
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  indent: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Text('Cinsiyet:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        _petGender,
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  indent: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Text('Aşılar:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        _petVac,
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  indent: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Text('Boy:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        _petHeight,
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  indent: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Text('Kilo:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        _petWeight,
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           Divider(),
           Padding(
@@ -186,15 +287,15 @@ class _PetDetailState extends State<PetDetail> {
       GoogleMap(
         myLocationButtonEnabled: false,
         zoomControlsEnabled: false,
-        initialCameraPosition: CameraPosition(target: _shelterLocation, zoom: 15.0),
+        initialCameraPosition:
+            CameraPosition(target: _shelterLocation, zoom: 15.0),
         onMapCreated: (controller) => {_googleMapController = controller},
         markers: {
           Marker(
-            markerId: MarkerId('shelter'),
-            infoWindow: InfoWindow(title: '$_shelterName'),
-            icon: mapMarker,
-            position: _shelterLocation
-          )
+              markerId: MarkerId('shelter'),
+              infoWindow: InfoWindow(title: '$_shelterName'),
+              icon: mapMarker,
+              position: _shelterLocation)
         },
       )
     ];

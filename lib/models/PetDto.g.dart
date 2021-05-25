@@ -3,7 +3,7 @@
 part of 'PetDto.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
+// JsonSerializableGenerator cidden bi obje maplamak bu kadar zahmetli olamaz. imza sercan bayrambey.
 // **************************************************************************
 
 PetDto _$PetDtoFromJson(Map<String, dynamic> json) {
@@ -27,8 +27,8 @@ PetDto _$PetDtoFromJson(Map<String, dynamic> json) {
     json['ShelterName'] as String,
     json['SpeciesId'] as int,
     json['SpeciesName'] as String,
-    json['ShelterLocationLat'] as String,
-    json['ShelterLocationLng'] as String
+    json['ShelterLocationLat'] == null ? "" :  json['ShelterLocationLat'] as String,
+    json['ShelterLocationLng'] == null ? "" :  json['ShelterLocationLng'] as String,
   );
 }
 
