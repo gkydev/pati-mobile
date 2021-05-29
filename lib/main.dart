@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pati_mobile/screens/home-page.dart';
 
 import 'screens/first_page.dart';
 import 'screens/login_page.dart';
@@ -18,7 +19,8 @@ void main() async {
       '/Login': (context) => LoginPage(),
       '/Register': (context) => RegisterPage(),
       '/PetList': (context) => PetList(),
-      '/PetDetail': (context) => PetDetail()
+      '/PetDetail': (context) => PetDetail(),
+      '/Home': (context) => HomePage(),
     },
     onUnknownRoute: (RouteSettings settings) =>
         MaterialPageRoute(builder: (context) => LoginPage()),

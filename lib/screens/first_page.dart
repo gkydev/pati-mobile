@@ -71,6 +71,23 @@ class FirstPage extends StatelessWidget {
                         ),
                         color: Colors.pink.shade300,
                       ),
+                      RaisedButton(
+                        elevation: 8,
+                        padding: EdgeInsets.all(10),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            "/Home",
+                          ).then((popValue) {
+                          });
+                        },
+                        child: Text(
+                          "Hayvan Sahiplenmenin Faydaları",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w500),
+                        ),
+                        color: Colors.pink.shade300,
+                      ),
                     ],
                   ),
                 )
