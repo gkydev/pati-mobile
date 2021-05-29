@@ -13,12 +13,11 @@ class _RegisterPageState extends State<RegisterPage> {
   int _aktifStep = 0;
   bool hata = false;
   List<Step> tumStepler;
-  String ad, soyad, email, password, id, phone;
+  String ad, soyad, email, password, phone;
   bool isRegisterProcessing = false;
 
   var adKey = GlobalKey<FormFieldState>();
   var soyadKey = GlobalKey<FormFieldState>();
-  var idKey = GlobalKey<FormFieldState>();
   var passKey = GlobalKey<FormFieldState>();
   var mailKey = GlobalKey<FormFieldState>();
   var phoneKey = GlobalKey<FormFieldState>();
@@ -70,129 +69,114 @@ class _RegisterPageState extends State<RegisterPage> {
     List<Step> steps = [
       Step(
         isActive: true,
-        title: Text("Ad"),
+        title: Text("Ad Soyad / Şifre"),
         state: _stateAyarla(0),
-        content: TextFormField(
-          key: adKey,
-          decoration: InputDecoration(
-            hintText: "Adınızı giriniz.",
-            labelText: "Ad",
-            prefixIcon: Icon(Icons.account_circle_sharp),
-          ),
-          validator: (deger) {
-            if (deger.length < 3) {
-              return "En az 3 karakter girilmeli.";
-            } else
-              return null;
-          },
-          onSaved: (value) {
-            ad = value;
-          },
-        ),
-      ),
-      Step(
-        isActive: true,
-        title: Text("Soyad"),
-        state: _stateAyarla(1),
-        content: TextFormField(
-          key: soyadKey,
-          decoration: InputDecoration(
-            hintText: "Soyadınızı giriniz.",
-            labelText: "Soyad",
-            prefixIcon: Icon(Icons.account_circle_sharp),
-          ),
-          validator: (deger) {
-            if (deger.length < 3) {
-              return "En az 3 karakter girilmeli.";
-            } else
-              return null;
-          },
-          onSaved: (value) {
-            soyad = value;
-          },
-        ),
-      ),
-      Step(
-        isActive: true,
-        title: Text("Kullanıcı Adı"),
-        state: _stateAyarla(2),
-        content: TextFormField(
-          key: idKey,
-          decoration: InputDecoration(
-            hintText: "Kullanıcı adınızı giriniz.",
-            labelText: "Kullanıcı Adı",
-            prefixIcon: Icon(Icons.account_circle),
-          ),
-          validator: (deger) {
-            if (deger.length < 6) {
-              return "En az 6 karakter giriniz.";
-            } else if (deger.length > 12) {
-              return "En fazla 12 karakter giriniz.";
-            } else
-              return null;
-          },
-          onSaved: (value) {
-            id = value;
-          },
-        ),
-      ),
-      Step(
-        isActive: true,
-        title: Text("Şifre"),
-        state: _stateAyarla(3),
-        content: TextFormField(
-          obscureText: true,
-          key: passKey,
-          decoration: InputDecoration(
-            hintText: "Şifrenizi giriniz.",
-            labelText: "Şifre",
-            prefixIcon: Icon(Icons.lock),
-          ),
-          validator: (deger) {
-            if (deger.length < 6) {
-              return "En az 6 karakter girilmeli.";
-            } else
-              return null;
-          },
-          onSaved: (value) {
-            password = value;
-          },
+        content: Column(
+          children: [
+            TextFormField(
+              textInputAction: TextInputAction.next,
+              autofocus: true,
+              key: adKey,
+              decoration: InputDecoration(
+                hintText: "Adınızı giriniz.",
+                labelText: "Ad",
+                prefixIcon: Icon(Icons.account_circle_sharp),
+              ),
+              validator: (deger) {
+                if (deger.length < 3) {
+                  return "En az 3 karakter girilmeli.";
+                } else
+                  return null;
+              },
+              onSaved: (value) {
+                ad = value;
+              },
+            ),
+            TextFormField(
+              textInputAction: TextInputAction.next,
+              autofocus: true,
+              key: soyadKey,
+              decoration: InputDecoration(
+                hintText: "Soyadınızı giriniz.",
+                labelText: "Soyad",
+                prefixIcon: Icon(Icons.account_circle_sharp),
+              ),
+              validator: (deger) {
+                if (deger.length < 3) {
+                  return "En az 3 karakter girilmeli.";
+                } else
+                  return null;
+              },
+              onSaved: (value) {
+                soyad = value;
+              },
+            ),
+            TextFormField(
+              autofocus: true,
+              obscureText: true,
+              key: passKey,
+              decoration: InputDecoration(
+                hintText: "Şifrenizi giriniz.",
+                labelText: "Şifre",
+                prefixIcon: Icon(Icons.lock),
+              ),
+              validator: (deger) {
+                if (deger.length < 6) {
+                  return "En az 6 karakter girilmeli.";
+                } else
+                  return null;
+              },
+              onSaved: (value) {
+                password = value;
+              },
+            ),
+          ],
         ),
       ),
       Step(
         isActive: true,
         title: Text("Email"),
-        state: _stateAyarla(4),
-        content: TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          key: mailKey,
-          decoration: InputDecoration(
-            hintText: "Email adresi giriniz.",
-            labelText: "Email",
-            prefixIcon: Icon(Icons.email),
-          ),
-          validator: _emailValidator,
-          onSaved: (value) {
-            email = value;
-          },
+        state: _stateAyarla(1),
+        content: Column(
+          children: [
+            TextFormField(
+              autofocus: true,
+              keyboardType: TextInputType.emailAddress,
+              key: mailKey,
+              decoration: InputDecoration(
+                hintText: "Email adresi giriniz.",
+                labelText: "Email",
+                prefixIcon: Icon(Icons.email),
+              ),
+              validator: _emailValidator,
+              onSaved: (value) {
+                email = value;
+              },
+            ),
+          ],
         ),
       ),
       Step(
         isActive: true,
         title: Text("Telefon Numarası"),
-        state: _stateAyarla(5),
-        content: TextFormField(
-          keyboardType: TextInputType.phone,
-          key: phoneKey,
-          decoration: InputDecoration(
-            hintText: "Telefon numaranızı giriniz.",
-            labelText: "Telefon",
-            prefixIcon: Icon(Icons.phone_android_rounded),
-          ),
-          validator: _phoneNumberValidator,
-          onSaved: (value) {
-            phone = value;
-          },
+        state: _stateAyarla(2),
+        content: Column(
+          children: [
+            TextFormField(
+              autofocus: true,
+              keyboardType: TextInputType.phone,
+              key: phoneKey,
+              decoration: InputDecoration(
+                hintText: "Telefon numaranızı giriniz.",
+                labelText: "Telefon",
+                prefixIcon: Icon(Icons.phone_android_rounded),
+              ),
+              validator: _phoneNumberValidator,
+              onSaved: (value) {
+                phone = value;
+              },
+            ),
+          ],
         ),
       ),
     ];
@@ -214,8 +198,12 @@ class _RegisterPageState extends State<RegisterPage> {
   void _continueButtonControl() {
     switch (_aktifStep) {
       case 0:
-        if (adKey.currentState.validate()) {
+        if (adKey.currentState.validate() &&
+            soyadKey.currentState.validate() &&
+            passKey.currentState.validate()) {
           adKey.currentState.save();
+          soyadKey.currentState.save();
+          passKey.currentState.save();
           hata = false;
           _aktifStep = 1;
         } else {
@@ -223,8 +211,8 @@ class _RegisterPageState extends State<RegisterPage> {
         }
         break;
       case 1:
-        if (soyadKey.currentState.validate()) {
-          soyadKey.currentState.save();
+        if (mailKey.currentState.validate()) {
+          mailKey.currentState.save();
           hata = false;
           _aktifStep = 2;
         } else {
@@ -232,37 +220,10 @@ class _RegisterPageState extends State<RegisterPage> {
         }
         break;
       case 2:
-        if (idKey.currentState.validate()) {
-          idKey.currentState.save();
-          hata = false;
-          _aktifStep = 3;
-        } else {
-          hata = true;
-        }
-        break;
-      case 3:
-        if (passKey.currentState.validate()) {
-          passKey.currentState.save();
-          hata = false;
-          _aktifStep = 4;
-        } else {
-          hata = true;
-        }
-        break;
-      case 4:
-        if (mailKey.currentState.validate()) {
-          mailKey.currentState.save();
-          hata = false;
-          _aktifStep = 5;
-        } else {
-          hata = true;
-        }
-        break;
-      case 5:
         if (phoneKey.currentState.validate()) {
           phoneKey.currentState.save();
           hata = false;
-          _aktifStep = 5;
+          _aktifStep = 2;
           completedForm();
         } else {
           hata = true;
@@ -272,19 +233,27 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void completedForm() {
-
     UserService()
         .registerAsync(new UserDto(ad, soyad, email, phone, password))
         .then((res) {
-          if (res.success) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/Login',
-              (Route<dynamic> route) => false,
-            );
-          } else {
-            print(res.message); //TODO: Ekranda hata mesajını göster.
-          }
+      if (res.success) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/Login',
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        print(res.message);
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.all(24),
+                title: Text("Bilgilerinizi kontrol ediniz."),
+                content: Text("Hata: " + res.message + "."),
+              );
+            });
+      }
     });
   }
 
