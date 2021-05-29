@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:pati_mobile/widgets/petListItem.dart';
 import '../services/PetService.dart';
 
 class PetList extends StatelessWidget {
@@ -14,30 +15,15 @@ class PetList extends StatelessWidget {
           future: x,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.data == null) {
-              return Container(child: Center(child: CircularProgressIndicator()));
+              return Container(
+                  child: Center(child: CircularProgressIndicator()));
             } else {
-              return ListView.builder(
-                itemCount: snapshot.data.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading: ConstrainedBox(
-                        constraints:
-                            BoxConstraints(minWidth: 100, minHeight: 50),
-                        child: Image.network(
-                          snapshot.data.data[index].images[0],
-                        )),
-                    title: Text(snapshot.data.data[index].petName,
-                        textAlign: TextAlign.center),
-                    subtitle: Text(snapshot.data.data[index].petAdditionInfo,
-                        textAlign: TextAlign.center),
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/PetDetail', arguments: snapshot.data.data[index]
-                      );
-                    },
-                  );
-                },
+              return ListView(
+                padding: const EdgeInsets.all(8),
+                children: <Widget>[
+                  for (var i = 0; i < snapshot.data.data.length; i++)
+                    PetListItem(snapshot.data.data[i]),
+                ],
               );
             }
           },

@@ -31,38 +31,42 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     tumStepler = _allSteps();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Kayıt Ol",
-          style: TextStyle(color: Colors.white),
+        appBar: AppBar(
+          title: Text(
+            "Kayıt Ol",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Stepper(
-          steps: tumStepler,
-          currentStep: _aktifStep,
-          /*onStepTapped: (tappedStep) {
-            setState(() {
-              _aktifStep = tappedStep;
-            });
-          },*/
-          onStepContinue: () {
-            setState(() {
-              _continueButtonControl();
-            });
-          },
-          onStepCancel: () {
-            setState(() {
-              if (_aktifStep > 0) {
-                _aktifStep--;
-              } else {
-                _aktifStep = 0;
-              }
-            });
-          },
-        ),
-      ),
-    );
+        body: Column(
+          children: [
+            SingleChildScrollView(
+              child: Stepper(
+                steps: tumStepler,
+                currentStep: _aktifStep,
+                onStepContinue: () {
+                  setState(() {
+                    print("asdf");
+                    _continueButtonControl();
+                  });
+                },
+                onStepCancel: () {
+                  setState(() {
+                    if (_aktifStep > 0) {
+                      _aktifStep--;
+                    } else {
+                      _aktifStep = 0;
+                    }
+                  });
+                },
+              ),
+            ),
+            Center(
+              child: isRegisterProcessing
+                  ? CircularProgressIndicator()
+                  : Container(),
+            ),
+          ],
+        ));
   }
 
   List<Step> _allSteps() {
@@ -233,6 +237,10 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void completedForm() {
+    setState(() {
+      isRegisterProcessing = true;
+    });
+
     UserService()
         .registerAsync(new UserDto(ad, soyad, email, phone, password))
         .then((res) {
@@ -243,7 +251,9 @@ class _RegisterPageState extends State<RegisterPage> {
           (Route<dynamic> route) => false,
         );
       } else {
-        print(res.message);
+        setState(() {
+          isRegisterProcessing = false;
+        });
         showDialog(
             context: context,
             builder: (BuildContext context) {

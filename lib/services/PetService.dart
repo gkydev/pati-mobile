@@ -19,7 +19,7 @@ class PetService extends BaseService {
       };
 
       var url = Uri.http(baseApiUrl, "/api/pet/getPets", queryParameters);
-      
+
       var response =
           await http.get(url, headers: await getDefaultHeadersWithJwtToken());
 
@@ -34,9 +34,13 @@ class PetService extends BaseService {
           });
         }
 
-         await Future.forEach(list, (element) async {
-            element.shelterName = await getShelterName(element.shelterId);
-          });
+        await Future.forEach(list, (element) async {
+          var shelter = await getShelter(element.shelterId);
+          element.shelterName = shelter["ShelterName"] ?? "";
+          element.shelterLocationLat = shelter["ShelterLocationLat"]??"";
+          element.shelterLocationLng = shelter["ShelterLocationLng"] ?? "";
+          element.shelterPhone = shelter["ShelterPhone"] ?? "";
+        });
 
         return new SuccessDataResult(list);
       }
@@ -84,17 +88,17 @@ class PetService extends BaseService {
     }
   }
 
-
-  Future<String> getShelterName(int shelterId) async {
+  Future<dynamic> getShelter(int shelterId) async {
     var queryParameters = {"id": shelterId.toString()};
 
     var url = Uri.http(baseApiUrl, "/api/admin/shelter", queryParameters);
-    var response = await http.get(url, headers: await getDefaultHeadersWithJwtToken());
+    var response =
+        await http.get(url, headers: await getDefaultHeadersWithJwtToken());
 
     if (isSuccessStatusCode(response.statusCode)) {
-      return json.decode(response.body)["ShelterName"];
+      return json.decode(response.body);
     } else {
-      return  "";
+      return "";
     }
   }
 }
