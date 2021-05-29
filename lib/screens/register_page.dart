@@ -31,42 +31,43 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     tumStepler = _allSteps();
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Kayıt Ol",
-            style: TextStyle(color: Colors.white),
-          ),
+      appBar: AppBar(
+        title: Text(
+          "Kayıt Ol",
+          style: TextStyle(color: Colors.white),
         ),
-        body: Column(
-          children: [
-            SingleChildScrollView(
-              child: Stepper(
-                steps: tumStepler,
-                currentStep: _aktifStep,
-                onStepContinue: () {
-                  setState(() {
-                    print("asdf");
-                    _continueButtonControl();
-                  });
-                },
-                onStepCancel: () {
-                  setState(() {
-                    if (_aktifStep > 0) {
-                      _aktifStep--;
-                    } else {
-                      _aktifStep = 0;
-                    }
-                  });
-                },
-              ),
+      ),
+      body: SingleChildScrollView(
+          child: Column(
+        children: [
+          SingleChildScrollView(
+            child: Stepper(
+              steps: tumStepler,
+              currentStep: _aktifStep,
+              onStepContinue: () {
+                setState(() {
+                  _continueButtonControl();
+                });
+              },
+              onStepCancel: () {
+                setState(() {
+                  if (_aktifStep > 0) {
+                    _aktifStep--;
+                  } else {
+                    _aktifStep = 0;
+                  }
+                });
+              },
             ),
-            Center(
-              child: isRegisterProcessing
-                  ? CircularProgressIndicator()
-                  : Container(),
-            ),
-          ],
-        ));
+          ),
+          Center(
+            child: isRegisterProcessing
+                ? CircularProgressIndicator()
+                : Container(),
+          ),
+        ],
+      )),
+    );
   }
 
   List<Step> _allSteps() {
